@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sidebarmenu/animation_widget.dart';
 
 import 'menu_layout.dart';
 
@@ -13,7 +14,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MenuPage()
+      home: SlideTransitionAnimationWidget()
+//    home : MenuPage()
     );
   }
 }

@@ -21,21 +21,27 @@ class _MenuPageState extends State<MenuPage>
   double screenWidth, screenHeight;
   final Duration duration = const Duration(milliseconds: 300);
   AnimationController _controller;
-  Animation<double> _scaleAnimation;
+  Animation<double> _pagescaleAnimation;
   Animation<double> _menuScaleAnimation;
   Animation<Offset> _slideAnimation;
-  SwiperController _swiperController = SwiperController();
+  SwiperController _swiperController;
 
   @override
   void initState() {
     super.initState();
+    // 初始化动画控制器
     _controller = AnimationController(vsync: this, duration: duration);
-    _scaleAnimation = Tween<double>(begin: 1, end: 0.8).animate(_controller);
+    // 初始化banner控制器
+    _swiperController = SwiperController();
+    _swiperController.autoplay = true;
+    // 初始化page缩放动画，从1.0缩小至0.8
+    _pagescaleAnimation = Tween<double>(begin: 1, end: 0.8).animate(_controller);
+    // 初始化menu缩放动画，从0.5放大至1.0
     _menuScaleAnimation =
         Tween<double>(begin: 0.5, end: 1).animate(_controller);
+    // 初始化page平移动画，从-1水平移至0
     _slideAnimation = Tween<Offset>(begin: Offset(-1, 0), end: Offset(0, 0))
         .animate(_controller);
-    _swiperController.autoplay = true;
   }
 
   @override
@@ -54,7 +60,7 @@ class _MenuPageState extends State<MenuPage>
     return Scaffold(
       backgroundColor: backgroundColor,
       body: Stack(
-        children: <Widget>[menu(context), dashboard(context)],
+        children: <Widget>[menu(context), homePage(context)],
       ),
     );
   }
@@ -75,6 +81,7 @@ class _MenuPageState extends State<MenuPage>
                 children: <Widget>[
                   Row(
                     children: <Widget>[
+                      // 设置用户头像部分
                       Expanded(
                           child: UserAccountsDrawerHeader(
                             margin: EdgeInsets.only(top: 48),
@@ -88,6 +95,7 @@ class _MenuPageState extends State<MenuPage>
                       ))
                     ],
                   ),
+                  // 设置navigation
                   ListTile(
                     leading: Icon(
                       Icons.home,
@@ -179,7 +187,7 @@ class _MenuPageState extends State<MenuPage>
     );
   }
 
-  Widget dashboard(context) {
+  Widget homePage(context) {
     return AnimatedPositioned(
       duration: duration,
       top: 0,
@@ -187,7 +195,7 @@ class _MenuPageState extends State<MenuPage>
       left: isCollapsed ? 0 : 0.6 * screenWidth,
       right: isCollapsed ? 0 : -0.4 * screenWidth,
       child: ScaleTransition(
-        scale: _scaleAnimation,
+        scale: _pagescaleAnimation,
         child: Material(
           animationDuration: duration,
           borderRadius: BorderRadius.all(Radius.circular(40)),
@@ -286,6 +294,7 @@ class _MenuPageState extends State<MenuPage>
     );
   }
 
+  // 设置banner的标题，以及指示器
   SwiperPagination pagination() => SwiperPagination(
       margin: EdgeInsets.all(0.0),
       builder: SwiperCustomPagination(
@@ -296,6 +305,10 @@ class _MenuPageState extends State<MenuPage>
           padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
           child: Row(
             children: <Widget>[
+              Text(
+                "title",
+                style: TextStyle(fontSize: 12.0, color: Colors.white),
+              ),
               Expanded(
                 flex: 1,
                 child: new Align(
